@@ -1,0 +1,54 @@
+{% extends 'layout.html' %}
+{% block body %}
+<!DOCTYPE html>
+<style>
+  table, th, td {
+  border: 1px solid black;
+}
+table {
+    counter-reset: tableCount;
+    width: 50%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+.counterCell:before {              
+    content: counter(tableCount); 
+    counter-increment: tableCount; 
+}
+
+button {
+  width: 150px;
+  text-align: center;
+}
+
+</style>
+
+
+<html>
+<h1 style="text-align: center;">Viewing Respondant Results for {{qname}}</h1>
+
+<div style="padding-top: 75px;" ></div>
+<table>
+  <tr>
+    <th>Rank</th>
+    <th>Candidate Email</th>
+    <th>Score</th>
+  </tr>
+  
+{% for item in range(scores|length) %}
+
+      <tr style="border: 1px black;">
+        <td class="counterCell"></td>
+        <td>{{scores[item][0]}}</td>
+        <td>{{scores[item][1]}}</td>
+      </tr>
+      
+    
+
+{% endfor %}
+</table>
+
+
+{% endblock %}

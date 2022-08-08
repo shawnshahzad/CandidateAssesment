@@ -1,0 +1,200 @@
+{% extends 'layout.html' %}
+{% block body %}
+<!DOCTYPE html>
+
+<html>
+  <form action = "http://127.0.0.1:5000/update" method = "POST">
+<head>
+<title>test page</title>
+<link rel="stylesheet" href=
+"https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+	integrity=
+"sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+	crossorigin="anonymous">
+<!-- sources used
+https://codepen.io/astrit/pen/OJPyqyx
+-->
+  <div class="alert alert-success" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <strong>Success!</strong> You have been signed in successfully!
+  </div>
+
+<style>@import "compass/css3";
+
+  body{
+    padding: 50px;
+  }</style>
+  
+<script>  window.setTimeout(function() {
+  $(".alert").fadeTo(500, 0) 
+}, 4000)
+
+</script>
+
+<h1>Editing {{qname}} </h1>
+
+<script type="text/javascript" src="/static/formOperations.js"></script>
+<script>
+$(document).ready(function () {
+  // Attach CB to "Add a row"
+  $('#addBtn').on('click', add_row);
+}); //document.ready end
+</script>
+<script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+</script>
+<script src=
+"https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js">
+</script>
+<script src=
+"https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js">
+</script>
+
+</head>
+
+<body>
+  <!--Body of the quiz to be populated dynamically-->
+<div class="container pt-4">
+	<div class="table-responsive">
+	<table class="table table-bordered">
+		<thead>
+		<tr>
+			<th class="text-center">Quiz Question</th>
+			<th class="text-center">Remove Row</th>
+		</tr>
+		</thead>
+		<tbody id="tbody">
+
+		</tbody>
+	</table>
+	</div>
+	<button class="btn btn-md btn-primary"
+	id="addBtn" type="button">
+		Add
+	</button>
+</div>
+
+<div class='row mt-5'>
+  <div class='col-4 mx-auto'>
+      <div class='form-group'>
+        <h3>Quiz Time</h3>
+        <label for="minutes">Minutes:</label>
+        <input type="number" id="quantity" name="minutes" min="1" max="20">
+      </div>
+      
+
+      <!-- for candiate email-->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+      <div class="container"style="max-width: 700px;">
+
+        <div class="text-center" style="margin: 20px 0px 20px 0px;">
+           
+            <span class="text-secondary">Enter the Email addresses to send the Quiz too</span>
+        </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div id="inputFormRow">
+                        <div class="input-group mb-3">
+                            <input type="text" id="email_text0" name="email" class="form-control m-input" placeholder="Enter title" autocomplete="off">
+                            <div class="input-group-append">
+                                <button id="removeRow" type="button" class="btn btn-danger">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="newRow"></div>
+                    <button id="addRow" type="button" class="btn btn-info">Add Row</button>
+                </div>
+            </div>
+        
+    </div>
+
+    <script type="text/javascript">
+        // add row
+        let cur_email = 1;
+        $("#addRow").click(function () {
+            var html = '';
+            let cur_id = cur_email.toString()
+            html += '<div id="inputFormRow">';
+            html += '<div class="input-group mb-3">';
+            html += '<input type="text" id="' + 'email_text' + cur_id + '"  name="email" class="form-control m-input" placeholder="Enter Email" autocomplete="off">';
+            html += '<div class="input-group-append">';
+            html += '<button id="removeRow" type="button" class="btn btn-danger">Remove</button>';
+            html += '</div>';
+            html += '</div>';
+            cur_email += 1
+
+            $('#newRow').append(html);
+        });
+
+        // remove row
+        $(document).on('click', '#removeRow', function () {
+            $(this).closest('#inputFormRow').remove();
+        });
+    </script>
+     
+      <br> 
+      <input type='submit' name='{{qname}}' value='Submit' class='btn btn-success'>
+    
+  </div>
+</div>
+
+</body>
+</form>
+
+</html>
+<script>
+{% for i in range(num_questions)%}
+	// Repopulate Questions
+	$(function() {
+    	$('#addBtn').click();
+    	//document.getElementById('{{questions[i][0]}}').value = '{{questions[i][1]}}';
+      $("[id^=ques_]").last().val('{{questions[i][1]}}');
+      $("[id^=anws_]").last().val('{{correct_answers[i][0]}}');
+      //console.log('{{correct_answers[i][0]}}');
+      //console.log('{{questions[i][0]}}',':', '{{questions[i][1]}}')
+      //console.log('num answers','{{num_answers_list[i]}}');
+	});
+	{% for j in range(num_answers_list[i])%}
+    // Repopulate number of answers
+    $(function () {
+      //console.log($('#tbody tr:last'));
+      //console.log($('#tbody tr:last .add'));
+      $('#tbody tr:last .add').click();
+      //console.log('{{answers_by_q[i][j]}}');
+      $("#tbody tr:last [id^=text_]").last().val('{{answers_by_q[i][j]}}');
+    });
+	{% endfor %}
+{% endfor %}
+
+{% for l in minutes %}
+		//Repopulate minutes
+		$(function() {
+    	document.getElementById('quantity').value = {{l}};
+	});
+{% endfor %}
+
+	//repopulate title (even though stores in emails)
+  $(function() {
+    let title = '{{emails[0]}}';
+    //console.log($('[name=email]:first').val());//.val(title);
+    $('[name=email]:first').val(title);//.val(title);
+    //console.log($('[name=email]:first').val());//.val(title);
+	});
+
+
+
+{% for m in range(1,emails|length)%}
+		//repopulate emails after the first (known bug: one additional blank email is)
+		$(function() {
+      $('#addRow').click();
+    	document.getElementById('email_text'+'{{m}}').value = '{{emails[m]}}';
+	});
+{% endfor %}
+
+</script>
+
+{% endblock %}
